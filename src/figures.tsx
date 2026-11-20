@@ -274,8 +274,81 @@ const figures: Record<string, { caption: string; node: React.ReactNode }> = {
       </Frame>
     ),
   },
+  'demo-1': {
+    caption: 'Окружность ρ = 2 cos φ: центр (1, 0), радиус 1. Угол φ от −π/2 до π/2.',
+    node: (
+      <Frame label="схема">
+        <line x1={40} y1={110} x2={330} y2={110} stroke={axis} />
+        <line x1={70} y1={20} x2={70} y2={200} stroke={axis} />
+        <circle cx={150} cy={110} r={80} fill={soft} stroke={ink} strokeWidth={2} />
+        <circle cx={70} cy={110} r={3.5} fill={accent} />
+        <circle cx={230} cy={110} r={3.5} fill={accent} />
+        <text x={74} y={128} fill={axis} fontSize={12}>O</text>
+        <text x={210} y={128} fill={ink} fontSize={13}>(2, 0)</text>
+        <text x={148} y={104} fill={accent} fontSize={12}>центр (1, 0)</text>
+      </Frame>
+    ),
+  },
+  'demo-2': {
+    caption: 'Треугольник на осях и прямой 3x + 2y = 6. На оси Oy плотность равна нулю.',
+    node: (
+      <Frame label="схема">
+        <line x1={40} y1={180} x2={330} y2={180} stroke={axis} />
+        <line x1={70} y1={20} x2={70} y2={200} stroke={axis} />
+        <polygon points="70,180 210,180 70,40" fill={soft} stroke={ink} strokeWidth={2} />
+        <text x={200} y={198} fill={ink} fontSize={12}>(2, 0)</text>
+        <text x={76} y={36} fill={ink} fontSize={12}>(0, 3)</text>
+        <text x={108} y={150} fill={accent} fontSize={13}>δ = x</text>
+        <text x={124} y={108} fill={ink} fontSize={12}>3x + 2y = 6</text>
+      </Frame>
+    ),
+  },
+  'demo-4': {
+    caption: 'Проекция конуса на Oxz — круг x² + (z − 1)² = 1, вырезанный цилиндром.',
+    node: (
+      <Frame label="схема">
+        <line x1={40} y1={120} x2={330} y2={120} stroke={axis} />
+        <line x1={80} y1={20} x2={80} y2={200} stroke={axis} />
+        <circle cx={180} cy={120} r={70} fill={soft} stroke={ink} strokeWidth={2} />
+        <circle cx={110} cy={120} r={3} fill={accent} />
+        <text x={86} y={138} fill={accent} fontSize={12}>O</text>
+        <text x={168} y={116} fill={ink} fontSize={13}>центр (0, 1)</text>
+        <text x={40} y={24} fill={axis} fontSize={12}>z</text>
+        <text x={308} y={114} fill={axis} fontSize={12}>x</text>
+      </Frame>
+    ),
+  },
+  'demo-7': {
+    caption: 'Треугольник O(0, 0), A(2, 0), B(4, 2). Положительный обход против часовой стрелки.',
+    node: (
+      <Frame label="схема">
+        <line x1={36} y1={180} x2={340} y2={180} stroke={axis} />
+        <line x1={60} y1={20} x2={60} y2={200} stroke={axis} />
+        <polygon points="60,180 180,180 300,60" fill={soft} stroke={ink} strokeWidth={2} />
+        <text x={64} y={198} fill={ink} fontSize={12}>O</text>
+        <text x={168} y={198} fill={ink} fontSize={12}>A(2, 0)</text>
+        <text x={304} y={56} fill={ink} fontSize={12}>B(4, 2)</text>
+        <text x={150} y={140} fill={accent} fontSize={12}>y = x/2</text>
+        <text x={200} y={168} fill={ink} fontSize={12}>y = x − 2</text>
+      </Frame>
+    ),
+  },
+  'demo-10': {
+    caption: 'Верхняя сторона z = √(1 − x²) между плоскостями y = 0 и y = 1.',
+    node: (
+      <Frame label="схема">
+        <path d="M50 160 A120 90 0 0 1 310 160" fill={soft} stroke={ink} strokeWidth={2} />
+        <path d="M50 150 A120 90 0 0 1 310 150" fill="none" stroke={axis} strokeWidth={1.4} />
+        <line x1={40} y1={170} x2={330} y2={170} stroke={axis} />
+        <line x1={180} y1={70} x2={180} y2={30} stroke={accent} strokeWidth={1.6} />
+        <polygon points="180,30 174,44 186,44" fill={accent} />
+        <text x={188} y={40} fill={accent} fontSize={12}>верхняя</text>
+        <text x={118} y={196} fill={ink} fontSize={13}>y от 0 до 1, x от −1 до 1</text>
+      </Frame>
+    ),
+  },
   'v4-4': {
-    caption: 'Правая полуокружность x² + y² = 2, z = 0, от A(0, −√2) к B(0, √2).',
+    caption: 'Правая полуокружность x² + y² = 2, x ≥ 0, от A(0, −√2) к B(0, √2). Форма y dx − x dy.',
     node: (
       <Frame label="схема">
         <line x1={40} y1={110} x2={330} y2={110} stroke={axis} />

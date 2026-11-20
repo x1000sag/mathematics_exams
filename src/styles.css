@@ -324,7 +324,7 @@ li::marker { color: #9a3412; }
   .progress { order: 3; flex: 1 1 100%; }
   .topbar-actions { margin-left: auto; }
   .sheet { padding: 18px 16px 72px; }
-  .article { padding-left: 14px; margin-left: 0; }
+  .article { padding-left: 14px; margin-left: 0; scroll-margin-top: 132px; }
   .article-head { flex-direction: column; }
   :root { font-size: 17px; }
 }

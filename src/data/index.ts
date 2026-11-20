@@ -7,4 +7,4 @@ import { variant4 } from './v4'
 
 export const pages: Page[] = [...guidePages, ...variant1, ...variant2, ...variant3, ...variant4]
 
-export const groups = ['Подготовка', 'Шпаргалка', 'Алгоритмы', 'Вариант 1', 'Вариант 2', 'Вариант 3', 'Вариант 4']
+export const groups = ['Подготовка', 'Шпаргалка', 'Алгоритмы', 'Демо', 'Вариант 2', 'Вариант 3', 'Вариант 4']
