@@ -1,8 +1,56 @@
 # Контрольная: криволинейные и поверхностные интегралы
 
-Конспект к переписыванию образца. Внутри все четыре варианта с подробными решениями, шпаргалка формул, алгоритмы по типам задач и список мест, где в этих листах обычно теряют знак.
+Конспект к переписыванию образца. Внутри демо (десять задач), варианты 2–4 с подробными решениями, шпаргалка формул, алгоритмы по типам задач и разбор знака $dx\,dz$.
 
-Демо — десять задач по криволинейным и поверхностным интегралам. Варианты 2–4 устроены одинаково: масса кривой, поверхностный интеграл I рода, ещё один интеграл I рода, криволинейный интеграл II рода, потенциал, поток.
+Актуальная ветка: `main`, последний коммит с демо и правками по фото — `67e9242`.
+
+## GitHub
+
+Основная копия на GitHub: [github.com/x1000sag/mathematics_exams](https://github.com/x1000sag/mathematics_exams) (приватный).
+
+### Первый раз залить историю (репозиторий на GitHub пустой)
+
+В **WSL**, со своим SSH-ключом, привязанным к GitHub:
+
+```bash
+git clone https://origin.cursor.com/git/x1000sag/MA-exam-integral.git
+cd MA-exam-integral
+git remote add github git@github.com:x1000sag/mathematics_exams.git
+git push -u github main
+```
+
+Через HTTPS, если пользуетесь `gh`:
+
+```bash
+gh auth login
+git clone https://origin.cursor.com/git/x1000sag/MA-exam-integral.git
+cd MA-exam-integral
+git remote add github https://github.com/x1000sag/mathematics_exams.git
+git push -u github main
+```
+
+### Клонировать уже с GitHub
+
+```bash
+git clone git@github.com:x1000sag/mathematics_exams.git
+cd mathematics_exams
+```
+
+### Обновиться после правок
+
+Если в рулёжке настроены оба `origin` (GitHub) и `cursor` (Origin):
+
+```bash
+git pull
+```
+
+Если клонирован только GitHub-репозиторий:
+
+```bash
+git pull origin main
+```
+
+Бэкап на Origin по-прежнему: `https://origin.cursor.com/git/x1000sag/MA-exam-integral.git`.
 
 ## Как открыть
 
