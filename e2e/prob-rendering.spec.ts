@@ -6,7 +6,7 @@ async function openProbPage(page: Page, pageId: string) {
     localStorage.setItem('kr-dg-training', '0')
     localStorage.setItem('kr-dg-flow', '1')
   })
-  await page.goto(`/#${pageId}`)
+  await page.goto(`#${pageId}`)
   await page.locator(`#page-${pageId}`).waitFor({ state: 'visible' })
   await page.locator(`#page-${pageId}`).scrollIntoViewIfNeeded()
 }

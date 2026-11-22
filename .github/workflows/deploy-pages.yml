@@ -33,8 +33,19 @@ jobs:
       - name: Однофайловая сборка
         run: npm run build
 
-      - name: Проверка артефакта
-        run: test -f dist/index.html && test "$(find dist -type f | wc -l)" -eq 1
+      - name: Подготовка артефакта Pages
+        run: touch dist/.nojekyll
+
+      - name: Проверка однофайловой сборки
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test "$(find dist -type f | wc -l)" -eq 2
+          ! grep -q 'src/main.tsx' dist/index.html
+          grep -q 'id="root"' dist/index.html
+          grep -qE '<script[^>]+type="module"' dist/index.html
+          size=$(wc -c < dist/index.html)
+          test "$size" -gt 1000000
 
       - name: Артефакт для скачивания
         uses: actions/upload-artifact@v4
