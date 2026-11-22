@@ -84,19 +84,31 @@ npm run preview
 
 ### На телефоне без `npm run`
 
-1. **Онлайн (удобнее всего).** После push в `main` GitHub Actions собирает сайт и выкладывает на **GitHub Pages** (см. ниже настройку репозитория). Откройте в браузере телефона URL Pages — одна ссылка, без установки Node.
+1. **Онлайн (удобнее всего).** После push в `main` GitHub Actions собирает сайт и выкладывает на **GitHub Pages**: [https://x1000sag.github.io/mathematics_exams/](https://x1000sag.github.io/mathematics_exams/). Откройте в браузере телефона — одна ссылка, без установки Node.
 2. **Один файл офлайн.** На странице последнего успешного workflow **Сборка и GitHub Pages** скачайте артефакт `kr-integraly-single` — там лежит тот же `index.html`. Сохраните на телефон и откройте в Chrome/Safari.
 3. **Своя сборка.** Соберите на компьютере (`npm run build`) и перешлите себе `dist/index.html` (мессенджер, облако, AirDrop и т.п.).
 
 ### GitHub Pages (первый раз)
 
-Для приватного репозитория Pages доступны на платных планах GitHub. В настройках репозитория `x1000sag/mathematics_exams`:
+Публичный URL после настройки: **https://x1000sag.github.io/mathematics_exams/**
+
+В настройках репозитория `x1000sag/mathematics_exams`:
 
 1. **Settings → Pages**
-2. **Build and deployment → Source:** `GitHub Actions` (не «Deploy from a branch»).
-3. После зелёного workflow на `main` адрес появится в **Settings → Pages** и в логе job `deploy` (переменная `page_url`).
+2. **Build and deployment → Source:** **только** `GitHub Actions` — не «Deploy from a branch».
+3. Если одновременно включены оба источника, workflow **pages build and deployment** (корень репозитория) перезаписывает однофайловую сборку и в браузере оказывается пустая страница с `src/main.tsx`. В корне лежит заглушка [`index.html`](index.html); точка входа Vite — [`app.html`](app.html).
+4. После зелёного workflow **«Сборка и GitHub Pages»** на `main` адрес также виден в **Settings → Pages** и в логе job `deploy` (`page_url`).
+5. Сборку для офлайн можно скачать в том же run: job **build** → артефакт **`kr-integraly-single`**.
 
-Workflow: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) — при каждом push в `main` пересобирает `dist/index.html` и публикует каталог `dist` (фактически одна страница).
+Локальная проверка как на Pages:
+
+```bash
+npm run build
+npm run preview
+# открыть http://127.0.0.1:4179/mathematics_exams/
+```
+
+Workflow: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) — при каждом push в `main` пересобирает `dist/index.html` (~3,5 МБ, JS/CSS внутри) и публикует каталог `dist`.
 
 ## Как пользоваться
 

@@ -13,8 +13,8 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
   },
   webServer: {
-    command: 'npm run preview',
-    url: 'http://127.0.0.1:4179',
+    command: 'npm run build && npm run preview',
+    url: 'http://127.0.0.1:4179/mathematics_exams/',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
