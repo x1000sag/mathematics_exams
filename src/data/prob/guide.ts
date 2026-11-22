@@ -159,7 +159,13 @@ $$\mathbb P(X < a) = \mathbb P\!\left(Z < \frac{a-\mu}{\sigma}\right) = \Phi\!\l
 
 На листе дают таблицу $\Phi(z)$ или $\Phi(-z)$. Разность $\Phi(a)-\Phi(b)$ — вероятность попадания в интервал.
 
-$\mathbb E[X]=\mu$, $\operatorname{Var}(X)=\sigma^2$. Симметрия: $\mathbb P(|X-\mu| > t) = 2\bigl(1-\Phi(t/\sigma)\bigr)$.
+**Симметрия относительно $\mu$** (хвост и «внутренний» интервал):
+
+$$\mathbb P(|X-\mu| > t) = 2\bigl(1-\Phi(t/\sigma)\bigr), \qquad \mathbb P(|X-\mu| < t) = 2\Phi(t/\sigma) - 1.$$
+
+Вторую формулу удобно записать и как $\Phi(t/\sigma) - \Phi(-t/\sigma)$. При $\mu=0$: $\mathbb P(|X| < a) = 2\Phi(a/\sigma) - 1$.
+
+$\mathbb E[X]=\mu$, $\operatorname{Var}(X)=\sigma^2$.
 
 ## Гамма — $X \sim \Gamma(\alpha, \lambda)$ (форма $\alpha$, масштаб $1/\lambda$)
 
