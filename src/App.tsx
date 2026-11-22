@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { exams, examById } from './data'
-import { Blocks, parse } from './markup'
+import { Blocks, Inline, parse } from './markup'
 import { GuideContext } from './guide-context'
 import type { Page } from './types'
 
@@ -161,8 +161,12 @@ export default function App() {
                       className={`${page.id === active ? 'active' : ''} ${done.has(page.id) ? 'done' : ''}`}
                       onClick={() => go(page.id)}
                     >
-                      {page.nav}
-                      {page.nav !== page.title && <small>{page.title}</small>}
+                      <Inline text={page.nav} />
+                      {page.nav !== page.title && (
+                        <small>
+                          <Inline text={page.title} />
+                        </small>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -215,7 +219,13 @@ export default function App() {
                   disabled={currentIndex <= 0}
                   onClick={() => currentIndex > 0 && go(pages[currentIndex - 1].id)}
                 >
-                  {currentIndex > 0 ? `← ${pages[currentIndex - 1].nav}` : 'Начало'}
+                  {currentIndex > 0 ? (
+                    <>
+                      ← <Inline text={pages[currentIndex - 1].nav} />
+                    </>
+                  ) : (
+                    'Начало'
+                  )}
                 </button>
                 <button
                   type="button"
@@ -223,7 +233,13 @@ export default function App() {
                   disabled={currentIndex >= pages.length - 1}
                   onClick={() => currentIndex < pages.length - 1 && go(pages[currentIndex + 1].id)}
                 >
-                  {currentIndex < pages.length - 1 ? `${pages[currentIndex + 1].nav} →` : 'Конец'}
+                  {currentIndex < pages.length - 1 ? (
+                    <>
+                      <Inline text={pages[currentIndex + 1].nav} /> →
+                    </>
+                  ) : (
+                    'Конец'
+                  )}
                 </button>
               </div>
             )}
@@ -240,8 +256,14 @@ function Article({ page, done, onToggle }: { page: Page; done: boolean; onToggle
     <article className="article" id={`page-${page.id}`}>
       <div className="article-head">
         <div>
-          {page.kicker && <p className="kicker">{page.kicker}</p>}
-          <h2>{page.title}</h2>
+          {page.kicker && (
+            <p className="kicker">
+              <Inline text={page.kicker} />
+            </p>
+          )}
+          <h2>
+            <Inline text={page.title} />
+          </h2>
         </div>
         <label className="check">
           <input type="checkbox" checked={done} onChange={onToggle} />
