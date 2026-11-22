@@ -23,7 +23,7 @@ $$\int_0^2 x(2-x)\,dx = \int_0^2 (2x-x^2)\,dx = \left[x^2 - \frac{x^3}{3}\right]
 
 $$\int_0^2 c\,x(2-x)\,dx = 1 \;\Rightarrow\; c = \frac{3}{4}.$$
 
-$$\mathbb E[X] = \frac{3}{4}\int_0^2 x^2(2-x)\,dx = \frac{3}{4}\int_0^2 (2x^3-x^4)\,dx = \frac{3}{4}\left[\frac{x^4}{2}-\frac{x^5}{5}\right]_0^2 = \frac{3}{4}\cdot\frac{8}{5} = 1.$$
+$$\mathbb E[X] = \frac{3}{4}\int_0^2 x^2(2-x)\,dx = \frac{3}{4}\int_0^2 (2x^2-x^3)\,dx = \frac{3}{4}\left[\frac{2x^3}{3}-\frac{x^4}{4}\right]_0^2 = \frac{3}{4}\cdot\frac{4}{3} = 1.$$
 
 $$\mathbb E[X^2] = \frac{3}{4}\int_0^2 x^3(2-x)\,dx = \frac{3}{4}\left[\frac{2x^4}{4}-\frac{x^5}{5}\right]_0^2 = \frac{3}{4}\cdot\frac{8}{5} = \frac{6}{5}.$$
 
