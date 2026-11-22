@@ -1,0 +1,60 @@
+name: Сборка и GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Однофайловая сборка
+        run: npm run build
+
+      - name: Проверка артефакта
+        run: test -f dist/index.html && test "$(find dist -type f | wc -l)" -eq 1
+
+      - name: Артефакт для скачивания
+        uses: actions/upload-artifact@v4
+        with:
+          name: kr-integraly-single
+          path: dist/index.html
+          retention-days: 90
+
+      - name: Загрузка на GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Публикация
+        id: deployment
+        uses: actions/deploy-pages@v4
