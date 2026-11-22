@@ -20,3 +20,4 @@ export type Block =
       blocks: Block[]
     }
   | { kind: 'fig'; name: string }
+  | { kind: 'table'; header: string[]; rows: string[][] }

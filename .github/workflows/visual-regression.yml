@@ -1,0 +1,31 @@
+name: Визуальные проверки
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Сборка
+        run: npm run build
+
+      - name: Браузер Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Скриншот-тесты теорвера
+        run: npm run test:e2e

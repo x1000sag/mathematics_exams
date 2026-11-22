@@ -50,6 +50,20 @@ function parseLines(
     if (text) blocks.push({ kind: 'p', text })
   }
 
+  const isTableRow = (line: string) => {
+    const t = line.trim()
+    return t.startsWith('|') && t.endsWith('|') && t.length > 2
+  }
+
+  const isTableSeparator = (line: string) => /^\|[\s\-:|]+\|$/.test(line.trim())
+
+  const tableCells = (line: string) =>
+    line
+      .trim()
+      .slice(1, -1)
+      .split('|')
+      .map((cell) => cell.trim())
+
   while (i < end) {
     const trimmed = lines[i].trim()
 
@@ -122,6 +136,19 @@ function parseLines(
       continue
     }
 
+    if (isTableRow(trimmed) && i + 1 < end && isTableSeparator(lines[i + 1].trim())) {
+      flush()
+      const header = tableCells(trimmed)
+      i += 2
+      const rows: string[][] = []
+      while (i < end && isTableRow(lines[i].trim()) && !isTableSeparator(lines[i].trim())) {
+        rows.push(tableCells(lines[i]))
+        i += 1
+      }
+      blocks.push({ kind: 'table', header, rows })
+      continue
+    }
+
     if (trimmed.startsWith('- ')) {
       flush()
       const items: string[] = []
@@ -171,9 +198,11 @@ function MathTex({ tex, display = false }: { tex: string; display?: boolean }) {
   return <span className="math-inline" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-function Inline({ text }: { text: string }) {
+function InlineParts({ text, allowBold }: { text: string; allowBold?: boolean }) {
   const { go } = useGuide()
-  const re = /\$([^$]+)\$|\*\*([^*]+)\*\*|\[([^\]]+)\]\(#([a-z0-9-]+)\)/g
+  const re = allowBold
+    ? /\$([^$]+)\$|\*\*([^*]+)\*\*|\[([^\]]+)\]\(#([a-z0-9-]+)\)/g
+    : /\$([^$]+)\$|\[([^\]]+)\]\(#([a-z0-9-]+)\)/g
   const out: ReactNode[] = []
   let last = 0
   let key = 0
@@ -182,28 +211,39 @@ function Inline({ text }: { text: string }) {
     if (index > last) out.push(text.slice(last, index))
     if (match[1] != null) {
       out.push(<MathTex key={key} tex={match[1]} />)
-    } else if (match[2] != null) {
-      out.push(<strong key={key}>{match[2]}</strong>)
-    } else {
-      const id = match[4]
+    } else if (allowBold && match[2] != null) {
       out.push(
-        <a
-          key={key}
-          href={`#${id}`}
-          onClick={(event) => {
-            event.preventDefault()
-            go(id)
-          }}
-        >
-          {match[3]}
-        </a>,
+        <strong key={key}>
+          <InlineParts text={match[2]} allowBold={false} />
+        </strong>,
       )
+    } else {
+      const label = allowBold ? match[3] : match[2]
+      const id = allowBold ? match[4] : match[3]
+      if (label != null && id != null) {
+        out.push(
+          <a
+            key={key}
+            href={`#${id}`}
+            onClick={(event) => {
+              event.preventDefault()
+              go(id)
+            }}
+          >
+            {label}
+          </a>,
+        )
+      }
     }
     key += 1
     last = index + match[0].length
   }
   if (last < text.length) out.push(text.slice(last))
   return <>{out}</>
+}
+
+export function Inline({ text }: { text: string }) {
+  return <InlineParts text={text} allowBold />
 }
 
 function Callout({ block }: { block: Extract<Block, { kind: 'callout' }> }) {
@@ -223,7 +263,9 @@ function Callout({ block }: { block: Extract<Block, { kind: 'callout' }> }) {
   if (hideAnswer) {
     return (
       <button type="button" className="answer answer-hidden" onClick={() => setOpen(true)}>
-        <span className="callout-kicker">{block.title}</span>
+        <span className="callout-kicker">
+          <Inline text={block.title} />
+        </span>
         <span>Скрыто. Нажмите, когда будете сверять.</span>
       </button>
     )
@@ -231,7 +273,9 @@ function Callout({ block }: { block: Extract<Block, { kind: 'callout' }> }) {
 
   return (
     <aside className={`callout ${block.tone}`}>
-      <div className="callout-kicker">{block.title}</div>
+      <div className="callout-kicker">
+        <Inline text={block.title} />
+      </div>
       <Blocks blocks={block.blocks} />
     </aside>
   )
@@ -280,6 +324,34 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
         }
         if (block.kind === 'math') return <MathTex key={index} tex={block.tex} display />
         if (block.kind === 'fig') return <Figure key={index} name={block.name} />
+        if (block.kind === 'table') {
+          return (
+            <div key={index} className="table-wrap">
+              <table className="md-table">
+                <thead>
+                  <tr>
+                    {block.header.map((cell, cellIndex) => (
+                      <th key={cellIndex}>
+                        <Inline text={cell} />
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {row.map((cell, cellIndex) => (
+                        <td key={cellIndex}>
+                          <Inline text={cell} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
         return <Callout key={index} block={block} />
       })}
     </>
