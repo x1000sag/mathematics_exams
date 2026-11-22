@@ -378,6 +378,49 @@ const figures: Record<string, { caption: string; node: React.ReactNode }> = {
       </Frame>
     ),
   },
+  'pt-density': {
+    caption: 'Плотность f(x) на отрезке [a,b]: площадь под графиком равна 1; вероятность — площадь над [c,d].',
+    node: (
+      <Frame label="плотность" w={380} h={200}>
+        <line x1={40} y1={160} x2={340} y2={160} stroke={axis} />
+        <line x1={60} y1={180} x2={60} y2={30} stroke={axis} />
+        <path
+          d={sample((x) => 0.6 * Math.sin(Math.PI * x) + 0.45, 0, 1, (x) => 60 + x * 260, (y) => 160 - y * 120)}
+          fill={soft}
+          stroke={ink}
+          strokeWidth={2}
+        />
+        <line x1={60} y1={160} x2={320} y2={160} stroke={ink} strokeWidth={1} />
+        <text x={52} y={175} fill={axis} fontSize={11}>
+          a
+        </text>
+        <text x={308} y={175} fill={axis} fontSize={11}>
+          b
+        </text>
+        <text x={24} y={36} fill={axis} fontSize={11}>
+          f
+        </text>
+      </Frame>
+    ),
+  },
+  'pt-normal': {
+    caption: 'Колокол нормального закона: центр μ, ширина связана с σ; P(a<X<b) — площадь под кривой на [a,b].',
+    node: (
+      <Frame label="нормальное" w={380} h={200}>
+        <line x1={40} y1={155} x2={340} y2={155} stroke={axis} />
+        <path
+          d={sample((x) => Math.exp(-2.5 * x * x), -1.6, 1.6, (x) => 190 + x * 95, (y) => 155 - y * 95)}
+          fill={soft}
+          stroke={ink}
+          strokeWidth={2}
+        />
+        <line x1={190} y1={155} x2={190} y2={62} stroke={accent} strokeDasharray="4 3" />
+        <text x={184} y={172} fill={accent} fontSize={12}>
+          μ
+        </text>
+      </Frame>
+    ),
+  },
   orient: {
     caption: 'Для графика z = z(x, y) вектор (−z_x, −z_y, 1) смотрит вверх. Нижняя сторона — противоположный вектор.',
     node: (

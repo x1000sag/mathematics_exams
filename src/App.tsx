@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import { pages, groups } from './data'
+import { exams, examById } from './data'
 import { Blocks, parse } from './markup'
 import { GuideContext } from './guide-context'
 import type { Page } from './types'
 
-const PROGRESS_KEY = 'kr-dg-progress'
+const EXAM_KEY = 'kr-dg-exam'
 const TRAIN_KEY = 'kr-dg-training'
 const FLOW_KEY = 'kr-dg-flow'
+
+function progressKey(examId: string) {
+  return `kr-dg-progress-${examId}`
+}
 
 function loadSet(key: string) {
   try {
@@ -18,16 +22,39 @@ function loadSet(key: string) {
   }
 }
 
+function loadExamId(): string {
+  const saved = localStorage.getItem(EXAM_KEY)
+  return exams.some((exam) => exam.id === saved) ? (saved as string) : exams[0].id
+}
+
+function resolvePageId(examPages: Page[], hash: string): string {
+  const id = hash.replace('#', '')
+  return examPages.some((page) => page.id === id) ? id : examPages[0].id
+}
+
 export default function App() {
-  const [active, setActive] = useState(() => {
-    const id = window.location.hash.replace('#', '')
-    return pages.some((page) => page.id === id) ? id : pages[0].id
-  })
+  const [examId, setExamId] = useState(loadExamId)
+  const exam = useMemo(() => examById(examId), [examId])
+  const { pages, groups } = exam
+
+  const [active, setActive] = useState(() => resolvePageId(pages, window.location.hash))
   const [query, setQuery] = useState('')
   const [navOpen, setNavOpen] = useState(false)
   const [training, setTraining] = useState(() => localStorage.getItem(TRAIN_KEY) === '1')
   const [flow, setFlow] = useState(() => localStorage.getItem(FLOW_KEY) === '1')
-  const [done, setDone] = useState<Set<string>>(() => loadSet(PROGRESS_KEY))
+  const [done, setDone] = useState<Set<string>>(() => loadSet(progressKey(examId)))
+
+  useEffect(() => {
+    localStorage.setItem(EXAM_KEY, examId)
+  }, [examId])
+
+  useEffect(() => {
+    const nextExam = examById(examId)
+    setDone(loadSet(progressKey(examId)))
+    const first = resolvePageId(nextExam.pages, window.location.hash)
+    const inThisExam = nextExam.pages.some((p) => p.id === first)
+    setActive(inThisExam ? first : (nextExam.pages[0]?.id ?? ''))
+  }, [examId])
 
   useEffect(() => {
     localStorage.setItem(TRAIN_KEY, training ? '1' : '0')
@@ -36,11 +63,21 @@ export default function App() {
     localStorage.setItem(FLOW_KEY, flow ? '1' : '0')
   }, [flow])
   useEffect(() => {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify([...done]))
-  }, [done])
+    localStorage.setItem(progressKey(examId), JSON.stringify([...done]))
+  }, [done, examId])
 
   const go = (id: string) => {
     if (!pages.some((page) => page.id === id)) return
+    setActive(id)
+    setNavOpen(false)
+    window.history.replaceState(null, '', `#${id}`)
+  }
+
+  const switchExam = (nextId: string) => {
+    if (nextId === examId) return
+    setExamId(nextId)
+    const next = examById(nextId)
+    const id = next.pages[0]?.id ?? ''
     setActive(id)
     setNavOpen(false)
     window.history.replaceState(null, '', `#${id}`)
@@ -69,7 +106,7 @@ export default function App() {
     const q = query.trim().toLowerCase()
     if (!q) return pages
     return pages.filter((page) => `${page.nav} ${page.title} ${page.kicker ?? ''} ${page.body}`.toLowerCase().includes(q))
-  }, [query])
+  }, [query, pages])
 
   const currentIndex = pages.findIndex((page) => page.id === active)
   const current = pages[currentIndex] ?? pages[0]
@@ -81,9 +118,23 @@ export default function App() {
         {navOpen && <button className="overlay" aria-label="Закрыть меню" onClick={() => setNavOpen(false)} />}
         <aside className={navOpen ? 'sidebar open' : 'sidebar'}>
           <div className="brand">
-            <p className="brand-kicker">К переписыванию</p>
-            <h1>Криволинейные и поверхностные интегралы</h1>
-            <p>Демо, три варианта контрольной, формулы и ловушки.</p>
+            <p className="brand-kicker">{exam.brandKicker}</p>
+            <h1>{exam.brandTitle}</h1>
+            <p>{exam.brandSubtitle}</p>
+            <div className="exam-switch" role="tablist" aria-label="Выбор конспекта">
+              {exams.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={item.id === examId}
+                  className={item.id === examId ? 'exam-tab active' : 'exam-tab'}
+                  onClick={() => switchExam(item.id)}
+                >
+                  {item.id === 'integrals' ? 'Интегралы' : 'Теорвер'}
+                </button>
+              ))}
+            </div>
           </div>
           <input
             id="search"
@@ -94,7 +145,7 @@ export default function App() {
             aria-label="Поиск по конспекту"
           />
           <nav className="nav" aria-label="Разделы">
-            {filtered.length === 0 && <p className="empty-nav">Ничего не нашлось. Попробуйте «поток» или «циклоида».</p>}
+            {filtered.length === 0 && <p className="empty-nav">Ничего не нашлось. Смените запрос или откройте «ленту».</p>}
             {groups.map((group) => {
               const items = filtered.filter((page) => page.group === group)
               if (items.length === 0) return null
