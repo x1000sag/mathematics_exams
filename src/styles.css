@@ -71,6 +71,31 @@ a:hover { color: #9a3412; }
   line-height: 1.4;
 }
 
+.exam-switch {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.exam-tab {
+  font-family: var(--sans);
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(243, 234, 215, 0.25);
+  background: rgba(0, 0, 0, 0.15);
+  color: #e8dfc8;
+  cursor: pointer;
+}
+.exam-tab:hover {
+  border-color: var(--gold);
+}
+.exam-tab.active {
+  background: rgba(230, 177, 122, 0.22);
+  border-color: var(--gold);
+  color: #fff8eb;
+}
+
 .search {
   display: block;
   margin: 12px 14px;
